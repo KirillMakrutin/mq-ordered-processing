@@ -1,0 +1,19 @@
+services:
+  rabbit:
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'guest'
+      MYSQL_PASSWORD: 'guest'
+      MYSQL_ROOT_PASSWORD: 'guest'
+    ports:
+      - '3306:3306'
