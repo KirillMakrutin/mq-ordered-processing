@@ -1,10 +1,10 @@
 package com.kmakrutin.producer.config;
 
-import com.kmakrutin.producer.service.PipeSyncSender;
-import com.kmakrutin.producer.service.Sender;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.integration.amqp.dsl.Amqp;
 import org.springframework.integration.config.EnableIntegration;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
@@ -20,6 +20,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Configuration
 public class IntegrationConfig {
     private static final String SENDER_CHANNEL = "sender";
+    private static final String PIPE_CHANNEL = "pipeline";
+    private static final String GROUP_HEADER = "groupId";
 
     private final AtomicInteger numProducer = new AtomicInteger();
 
@@ -38,13 +40,12 @@ public class IntegrationConfig {
     }
 
     @Bean
-    IntegrationFlow senderFlow(Sender sender) {
+    IntegrationFlow senderFlow(RabbitTemplate rabbitTemplate) {
         return IntegrationFlows.from(SENDER_CHANNEL)
-                .<Integer>handle((p, h) -> {
-                    sender.send(p);
-
-                    return null;
-                })
+                .enrichHeaders(h -> h.headerFunction(GROUP_HEADER, message -> "seq"))
+                .handle(Amqp
+                        .outboundAdapter(rabbitTemplate)
+                        .routingKey(PIPE_CHANNEL))
                 .get();
     }
 }

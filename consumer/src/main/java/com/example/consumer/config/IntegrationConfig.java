@@ -10,7 +10,6 @@ import org.springframework.integration.amqp.dsl.Amqp;
 import org.springframework.integration.config.EnableIntegration;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 
 @Slf4j
@@ -18,6 +17,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @Configuration
 public class IntegrationConfig {
     private static final String PIPE_QUEUE = "pipeline";
+    private static final int NUM_THREADS = 5;
 
     @Bean
     public Queue pipeQueue() {
@@ -25,13 +25,12 @@ public class IntegrationConfig {
     }
 
     @Bean
-    IntegrationFlow pipeFlow(FooHandler handler, ConnectionFactory connectionFactory, ThreadPoolTaskExecutor threadPoolTaskExecutor) {
+    IntegrationFlow pipeFlow(FooHandler handler,
+                             ConnectionFactory connectionFactory) {
         return IntegrationFlows.from(
                         Amqp.inboundGateway(connectionFactory, PIPE_QUEUE)
                                 .defaultReplyTo("nullChannel")
-                                .configureContainer(c -> c
-                                        .concurrentConsumers(5)
-                                        .taskExecutor(threadPoolTaskExecutor)))
+                                .configureContainer(c -> c.concurrentConsumers(NUM_THREADS)))
                 .handle(handler)
                 .get();
     }
