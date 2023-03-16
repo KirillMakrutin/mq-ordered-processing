@@ -42,11 +42,11 @@ public class FooHandler implements GenericHandler<Integer> {
 
             threadPoolTaskExecutor.execute(() -> {
                 try {
-                    TimeUnit.MILLISECONDS.sleep(Math.abs(NEXT.nextInt(1000)));
+                    TimeUnit.MILLISECONDS.sleep(Math.abs(NEXT.nextInt(10000)));
 
                     log.info(">>> Consumed {}", num);
 
-                    repository.save(new Foo(num));
+                    repository.save(new Foo(num, groupId));
 
 
                     buffer.take();
@@ -57,7 +57,7 @@ public class FooHandler implements GenericHandler<Integer> {
         } else {
             log.info(">>> Consumed {}", num);
 
-            repository.save(new Foo(num));
+            repository.save(new Foo(num, "common"));
         }
 
         return num;

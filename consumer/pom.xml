@@ -37,6 +37,11 @@
             <groupId>org.springframework.integration</groupId>
             <artifactId>spring-integration-jpa</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>http-client</artifactId>
+            <version>5.0.0</version>
+        </dependency>
 
         <dependency>
             <groupId>com.mysql</groupId>

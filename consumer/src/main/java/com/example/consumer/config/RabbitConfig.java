@@ -40,10 +40,9 @@ public class RabbitConfig {
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setThreadNamePrefix("ConsumerExecutor-");
-        executor.setCorePoolSize(2000);
-        executor.setMaxPoolSize(3500);
-        executor.setQueueCapacity(1000000);
-        executor.setKeepAliveSeconds(300);
+        executor.setCorePoolSize(5);
+        executor.setKeepAliveSeconds(10);
+        executor.setWaitForTasksToCompleteOnShutdown(true);
 
         return executor;
     }

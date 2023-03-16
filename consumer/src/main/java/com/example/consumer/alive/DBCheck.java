@@ -14,6 +14,6 @@ public class DBCheck implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        repository.deleteAll();
+        repository.count();
     }
 }

@@ -22,6 +22,8 @@ target/
 *.iml
 *.ipr
 
+rabbitmq/logs/**
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
