@@ -1,6 +1,5 @@
 package com.kmakrutin.producer.config;
 
-import com.kmakrutin.producer.service.PipeSyncSender;
 import com.kmakrutin.producer.service.Sender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Configuration
 public class IntegrationConfig {
     private static final String SENDER_CHANNEL = "sender";
+
 
     private final AtomicInteger numProducer = new AtomicInteger();
 
@@ -41,10 +41,37 @@ public class IntegrationConfig {
     IntegrationFlow senderFlow(Sender sender) {
         return IntegrationFlows.from(SENDER_CHANNEL)
                 .<Integer>handle((p, h) -> {
-                    sender.send(p);
+                    sender.send(p, getPropertyCode(p));
 
                     return null;
                 })
                 .get();
+    }
+
+    private static String getPropertyCode(Integer p) {
+        switch (p % 10) {
+            case 0:
+                return "ABC000";
+            case 1:
+                return "ABC001";
+            case 2:
+                return "ABC002";
+            case 3:
+                return "ABC003";
+            case 4:
+                return "ABC004";
+            case 5:
+                return "ABC005";
+            case 6:
+                return "ABC006";
+            case 7:
+                return "ABC007";
+            case 8:
+                return "ABC008";
+            case 9:
+                return "ABC009";
+            default:
+                return "UNKNOWN";
+        }
     }
 }

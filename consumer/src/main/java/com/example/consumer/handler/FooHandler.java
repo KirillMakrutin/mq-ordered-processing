@@ -16,17 +16,18 @@ import java.util.concurrent.TimeUnit;
 @AllArgsConstructor
 @Component
 public class FooHandler implements GenericHandler<Integer> {
+    private static final String PROPERTY_CODE_HEADER = "propertyCode";
     private static final Random NEXT = new Random();
     private final FooRepository repository;
 
     @SneakyThrows
     @Override
     public Integer handle(Integer payload, MessageHeaders headers) {
-        TimeUnit.MILLISECONDS.sleep(Math.abs(NEXT.nextInt(1000)));
+        TimeUnit.MILLISECONDS.sleep(Math.abs(NEXT.nextInt(10_000)));
 
         log.info(">>> Consumed {}", payload);
 
-        repository.save(new Foo(payload));
+        repository.save(new Foo(payload, String.valueOf(headers.get(PROPERTY_CODE_HEADER))));
 
         return payload;
     }

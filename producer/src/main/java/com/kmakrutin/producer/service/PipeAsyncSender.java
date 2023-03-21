@@ -18,8 +18,11 @@ public class PipeAsyncSender implements Sender {
     private final RabbitTemplate rabbitTemplate;
 
     @Override
-    public void send(Integer num) {
-        rabbitTemplate.convertAndSend(PIPE_CHANNEL, num);
+    public void send(Integer num, String propertyCode) {
+        rabbitTemplate.convertAndSend(PIPE_CHANNEL, num, message -> {
+            message.getMessageProperties().setHeader(Sender.PROPERTY_CODE_HEADER, propertyCode);
+            return message;
+        });
         log.info(">>> Produced {}", num);
     }
 }

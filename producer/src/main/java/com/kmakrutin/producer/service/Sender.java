@@ -1,5 +1,7 @@
 package com.kmakrutin.producer.service;
 
 public interface Sender {
-    void send(Integer num);
+    String PROPERTY_CODE_HEADER = "propertyCode";
+
+    void send(Integer num, String propertyCode);
 }
