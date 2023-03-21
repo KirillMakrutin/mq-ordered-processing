@@ -2,7 +2,7 @@ package org.example;
 
 import org.example.dao.FooDao;
 import org.example.dao.FooDaoImpl;
-import org.example.dao.view.NumGroupTableModel;
+import org.example.dao.view.PropertySeriesTableModel;
 
 import javax.swing.*;
 import java.util.concurrent.TimeUnit;
@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 public class App {
     public static void main(String[] args) throws InterruptedException {
 
-        NumGroupTableModel model = new NumGroupTableModel();
+        PropertySeriesTableModel model = new PropertySeriesTableModel();
         JTable table = new JTable(model);
         JFrame frame = new JFrame("FileTableDemo");
         frame.getContentPane().add(new JScrollPane(table), "Center");

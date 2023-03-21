@@ -3,10 +3,10 @@ package org.example.dao.view;
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
-public class NumGroupTableModel extends AbstractTableModel {
+public class PropertySeriesTableModel extends AbstractTableModel {
     private List<String[]> data = List.of();
 
-    private static final String[] columnNames = new String[]{"Group", "Series"};
+    private static final String[] columnNames = new String[]{"Property Code", "Series"};
     private static final Class<?>[] columnClasses = new Class[]{String.class, String.class};
 
 

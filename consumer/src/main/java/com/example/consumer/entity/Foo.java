@@ -22,7 +22,7 @@ public class Foo {
     private Integer num;
 
     @Column
-    private String groupId;
+    private String propertyCode;
 
     @CreatedDate
     @Column
@@ -35,8 +35,8 @@ public class Foo {
     public Foo() {
     }
 
-    public Foo(int num, String groupId) {
+    public Foo(int num, String propertyCode) {
         this.num = num;
-        this.groupId = groupId;
+        this.propertyCode = propertyCode;
     }
 }

@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class IntegrationConfig {
     private static final String SENDER_CHANNEL = "sender";
     private static final String PIPE_EXCHANGE = "pipeline-ex";
-    private static final String GROUP_HEADER = "groupId";
+    private static final String PROPERTY_CODE_HEADER = "propertyCode";
 
     private final AtomicInteger numProducer = new AtomicInteger();
 
@@ -43,37 +43,37 @@ public class IntegrationConfig {
     @Bean
     IntegrationFlow senderFlow(RabbitTemplate rabbitTemplate) {
         return IntegrationFlows.from(SENDER_CHANNEL)
-                .enrichHeaders(h -> h.headerFunction(GROUP_HEADER, message -> {
+                .enrichHeaders(h -> h.headerFunction(PROPERTY_CODE_HEADER, message -> {
                     switch ((int) message.getPayload() % 10) {
                         case 0:
-                            return "group0";
+                            return "ABC000";
                         case 1:
-                            return "group1";
+                            return "ABC001";
                         case 2:
-                            return "group2";
+                            return "ABC002";
                         case 3:
-                            return "group3";
+                            return "ABC003";
                         case 4:
-                            return "group4";
+                            return "ABC004";
                         case 5:
-                            return "group5";
+                            return "ABC005";
                         case 6:
-                            return "group6";
+                            return "ABC006";
                         case 7:
-                            return "group7";
+                            return "ABC007";
                         case 8:
-                            return "group8";
+                            return "ABC008";
                         case 9:
-                            return "group9";
+                            return "ABC009";
                         default:
-                            return "common";
+                            return "UNKNOWN";
                     }
                 }))
                 .log(Message::getPayload)
                 .handle(Amqp
                         .outboundAdapter(rabbitTemplate)
                         .exchangeName(PIPE_EXCHANGE)
-                        .routingKeyExpression("headers.groupId"))
+                        .routingKeyExpression("headers.propertyCode"))
                 .get();
     }
 }

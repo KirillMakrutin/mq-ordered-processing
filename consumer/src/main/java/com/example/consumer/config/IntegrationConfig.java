@@ -31,12 +31,12 @@ public class IntegrationConfig {
     private static final String PIPE_QUEUE = "pipeline-" + UUID.randomUUID();
     private static final int NUM_THREADS = 5;
 
-    private static final String GROUP_HEADER = "groupId";
+    private static final String PROPERTY_CODE_HEADER = "propertyCode";
 
     @Bean
     public Exchange pipeExchange() {
 
-        return new CustomExchange(PIPE_EXCHANGE, "x-consistent-hash", true, false, Map.of("hash-header", GROUP_HEADER));
+        return new CustomExchange(PIPE_EXCHANGE, "x-consistent-hash", true, false, Map.of("hash-header", PROPERTY_CODE_HEADER));
     }
 
     @Bean
