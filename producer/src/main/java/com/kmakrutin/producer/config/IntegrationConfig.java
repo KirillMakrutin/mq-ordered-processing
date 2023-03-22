@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class IntegrationConfig {
     private static final String SENDER_CHANNEL = "sender";
     private static final String PIPE_CHANNEL = "pipeline";
-    private static final String GROUP_HEADER = "groupId";
+    private static final String PROPERTY_CODE_HEADER = "propertyCode";
 
     private final AtomicInteger numProducer = new AtomicInteger();
 
@@ -42,7 +42,32 @@ public class IntegrationConfig {
     @Bean
     IntegrationFlow senderFlow(RabbitTemplate rabbitTemplate) {
         return IntegrationFlows.from(SENDER_CHANNEL)
-                .enrichHeaders(h -> h.headerFunction(GROUP_HEADER, message -> "seq"))
+                .enrichHeaders(h -> h.headerFunction(PROPERTY_CODE_HEADER, message -> {
+                    switch ((int) message.getPayload() % 10) {
+                        case 0:
+                            return "ABC000";
+                        case 1:
+                            return "ABC001";
+                        case 2:
+                            return "ABC002";
+                        case 3:
+                            return "ABC003";
+                        case 4:
+                            return "ABC004";
+                        case 5:
+                            return "ABC005";
+                        case 6:
+                            return "ABC006";
+                        case 7:
+                            return "ABC007";
+                        case 8:
+                            return "ABC008";
+                        case 9:
+                            return "ABC009";
+                        default:
+                            return "UNKNOWN";
+                    }
+                }))
                 .handle(Amqp
                         .outboundAdapter(rabbitTemplate)
                         .routingKey(PIPE_CHANNEL))

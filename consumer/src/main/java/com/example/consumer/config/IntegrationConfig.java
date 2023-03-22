@@ -30,7 +30,7 @@ public class IntegrationConfig {
         return IntegrationFlows.from(
                         Amqp.inboundGateway(connectionFactory, PIPE_QUEUE)
                                 .defaultReplyTo("nullChannel")
-                                .configureContainer(c -> c.concurrentConsumers(NUM_THREADS)))
+                                .configureContainer(c -> c.concurrentConsumers(NUM_THREADS).prefetchCount(1)))
                 .handle(handler)
                 .get();
     }

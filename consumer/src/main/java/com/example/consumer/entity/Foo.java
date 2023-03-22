@@ -21,6 +21,9 @@ public class Foo {
     @Column
     private Integer num;
 
+    @Column
+    private String propertyCode;
+
     @CreatedDate
     @Column
     private LocalDateTime created;
@@ -32,7 +35,8 @@ public class Foo {
     public Foo() {
     }
 
-    public Foo(int num) {
+    public Foo(int num, String propertyCode) {
         this.num = num;
+        this.propertyCode = propertyCode;
     }
 }

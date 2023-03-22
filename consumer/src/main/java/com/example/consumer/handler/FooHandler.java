@@ -17,7 +17,7 @@ import java.util.concurrent.*;
 @Slf4j
 @Component
 public class FooHandler implements GenericHandler<Integer> {
-    private static final String GROUP_HEADER = "groupId";
+    private static final String PROPERTY_CODE_HEADER = "propertyCode";
     private static final Random NEXT = new Random();
 
     private final Map<String, BlockingQueue<Integer>> messageBuffers = new ConcurrentHashMap<>();
@@ -34,20 +34,19 @@ public class FooHandler implements GenericHandler<Integer> {
     @Override
     public Integer handle(Integer num, MessageHeaders headers) {
 
+        String propertyCode = extractPropertyCodeFromMessage(headers);
 
-        String groupId = extractGroupIdFromMessage(headers);
-        if (groupId != null) {
-            BlockingQueue<Integer> buffer = messageBuffers.computeIfAbsent(groupId, k -> new LinkedBlockingQueue<>(1));
+        if (propertyCode != null) {
+            BlockingQueue<Integer> buffer = messageBuffers.computeIfAbsent(propertyCode, k -> new LinkedBlockingQueue<>(1));
             buffer.put(num);
 
             threadPoolTaskExecutor.execute(() -> {
                 try {
-                    TimeUnit.MILLISECONDS.sleep(Math.abs(NEXT.nextInt(1000)));
+                    TimeUnit.MILLISECONDS.sleep(Math.abs(NEXT.nextInt(10_000)));
 
                     log.info(">>> Consumed {}", num);
 
-                    repository.save(new Foo(num));
-
+                    repository.save(new Foo(num, propertyCode));
 
                     buffer.take();
                 } catch (InterruptedException e) {
@@ -57,14 +56,14 @@ public class FooHandler implements GenericHandler<Integer> {
         } else {
             log.info(">>> Consumed {}", num);
 
-            repository.save(new Foo(num));
+            repository.save(new Foo(num, "unknown"));
         }
 
         return num;
     }
 
-    private String extractGroupIdFromMessage(MessageHeaders headers) {
-        // extract the group ID header from the message
-        return Optional.ofNullable(headers.get(GROUP_HEADER)).map(String::valueOf).orElse(null);
+    private String extractPropertyCodeFromMessage(MessageHeaders headers) {
+        // extract the property code header from the message
+        return Optional.ofNullable(headers.get(PROPERTY_CODE_HEADER)).map(String::valueOf).orElse(null);
     }
 }
