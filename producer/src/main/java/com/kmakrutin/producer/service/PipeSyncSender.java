@@ -3,10 +3,12 @@ package com.kmakrutin.producer.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @AllArgsConstructor
 @Slf4j
+@Profile("sync")
 @Component
 public class PipeSyncSender implements Sender {
     private static final String PIPE_CHANNEL = "pipeline";

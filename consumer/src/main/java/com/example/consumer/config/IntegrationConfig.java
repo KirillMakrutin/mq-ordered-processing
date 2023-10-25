@@ -31,6 +31,7 @@ public class IntegrationConfig {
                                 .defaultReplyTo("nullChannel")
                                 .configureContainer(c -> c
                                         .concurrentConsumers(5)
+                                        .prefetchCount(5)
                                         .taskExecutor(threadPoolTaskExecutor)))
                 .handle(handler)
                 .get();
